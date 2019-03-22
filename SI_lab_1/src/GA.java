@@ -1,7 +1,7 @@
 public class GA {
     private static final double crossover = 0.7;
-    private static final double mutationRate = 0.02;
-    private static final int tournamentSize = 5;
+    private static final double mutationRate = 0.01;
+    private static final int tournamentSize = 25;
     private static final boolean elitism = true;
 
     public static Population evolvePopulation(Population pop) {
@@ -17,6 +17,9 @@ public class GA {
         for (int i = elitismOffset; i < pop.populationSize(); i++) {
             if(Math.random() < crossover) {
                 // Select parents
+                //Thief parent1 = roulleteWheel(pop);
+                //Thief parent2 = roulleteWheel(pop);
+
                 Thief parent1 = tournamentSelection(pop);
                 Thief parent2 = tournamentSelection(pop);
                 // Crossover parents
@@ -96,6 +99,22 @@ public class GA {
             tournament.addThief(pop.getThief(randomId));
         }
         return tournament.getFittest();
+    }
+
+    private static Thief roulleteWheel(Population pop){
+        double totalFitness = 0;
+        for(int i = 0; i < pop.populationSize(); i++){
+            totalFitness += pop.getThief(i).getFitness();
+        }
+        double value = Math.random()*totalFitness;
+        for(int i = 0; i < pop.populationSize(); i++){
+            value -= pop.getThief(i).getFitness();
+            if(value < 0)
+                return pop.getThief(i);
+        }
+        return pop.getThief(pop.populationSize() - 1);
+
+
     }
 
 }
